@@ -1,14 +1,12 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const { PrismaClient } = require("@prisma/client");
 
 //untuk membaca file .env
 dotenv.config();
 
-const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT;
-const todoRoutes = require("./routes/todo");
+const todoRoutes = require("./routes/todo.routes");
 const middlewareLogReq = require("./middleware/logs");
 
 //untuk mengizinkan middleware request seluruh berupa json

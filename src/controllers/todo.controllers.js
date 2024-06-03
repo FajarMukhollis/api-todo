@@ -1,6 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
-
-const prisma = new PrismaClient();
+const prisma = require("../db/prisma");
 
 //CREATE TODO
 const createNewTodo = async (req, res) => {
@@ -21,10 +19,10 @@ const createNewTodo = async (req, res) => {
 
 //READ ALL TODO
 const getAllTodo = async (req, res) => {
-  const todo = await prisma.todo_list.findMany();
+  const todos = await prisma.todo_list.findMany();
   res.status(200).json({
     message: "Get todo Success!",
-    data: todo,
+    data: todos,
   });
 };
 
@@ -36,7 +34,12 @@ const getTodoById = async (req, res) => {
       id: idTodo,
     },
   });
-  res.status(200).json({
+  if(!todo) {
+    res.status(400).json({
+      message: "Data not found!",
+    });
+  }
+  res.status(200).send({
     message: "Get todo by id success!",
     data: todo,
   });
@@ -45,16 +48,16 @@ const getTodoById = async (req, res) => {
 //UPDATE TODO
 const updateTodo = async (req, res) => {
   const idTodo = req.params.id;
-  const dataTodo = req.body;
+  const newDataTodo = req.body;
 
   const todo = await prisma.todo_list.update({
     where: {
       id: idTodo,
     },
     data: {
-      title: dataTodo.title,
-      type_todo: dataTodo.type_todo,
-      description: dataTodo.description,
+      title: newDataTodo.title,
+      type_todo: newDataTodo.type_todo,
+      description: newDataTodo.description,
       time_changed: new Date(),
     },
   });
